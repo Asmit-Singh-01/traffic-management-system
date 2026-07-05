@@ -30,6 +30,10 @@ jobs:
     # STEP 2: Train the AI Brain using the generated CSV
     - name: Train AI Brain
       run: python ai_brain.py
+    # STEP 2.5: Re-run simulation now that AI model exists to test inference
+    - name: Run AI-Powered Inference Simulation
+      run: python simulation.py
+      
 
     # STEP 3: Extract both Dataset and the trained AI Model
     - name: Upload DATG Artifacts (Dataset & Model)
