@@ -34,17 +34,21 @@ class JunctionAgent:
         lane_weights = {lane: (count / total_load) * 100 for lane, count in self.lanes.items()}
         target_lane = max(lane_weights, key=lane_weights.get)
         
-        # 2. 🧠 AI INFERENCE: Ask the trained model for the exact time needed
+                # 2. 🧠 AI INFERENCE: Ask the trained model for the exact time needed
         if self.ai_active:
             allocated_time = self.brain.predict_optimal_time(
                 self.lanes["North"], self.lanes["South"], 
                 self.lanes["East"], self.lanes["West"]
             )
-            # Clamping AI prediction to realistic safety limits
+            # 👇 YEH LINE ADD KARNI HAI VISUAL PROOF KE LIYE
+            print(f"[🧠 AI INFERENCE ACTIVE] {self.location_name} timing predicted by AI Brain: {allocated_time}s")
+            
             allocated_time = max(10, min(60, allocated_time))
         else:
-            # Fallback to Math if AI model is missing
+            # 👇 YEH LINE BHI UPDATE KAR LO TAAKI FARQ DIKHE
+            print(f"[⚠️ FALLBACK MATH ACTIVE] {self.location_name} using static formula.")
             allocated_time = max(10, min(45, int((self.lanes[target_lane] / total_load) * 90)))
+
         
         potential_outflow = int(allocated_time / 1.5)
         actual_outflow = min(self.lanes[target_lane], potential_outflow)
