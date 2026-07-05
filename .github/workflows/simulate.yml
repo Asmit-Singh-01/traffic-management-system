@@ -1,6 +1,6 @@
 name: DATG Cloud Simulation Engine
 
-# Ye pipeline tab chalegi jab tum code change karoge ya manually button dabaoge
+# Trigger automatically on push or manual button click
 on:
   push:
     branches: [ main, master ]
@@ -11,24 +11,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # Step 1: Server par tumhara code fetch karna
     - name: Checkout Code
       uses: actions/checkout@v4
 
-    # Step 2: Server par Python install karna
     - name: Setup Python Environment
       uses: actions/setup-python@v5
       with:
         python-version: '3.10'
 
-    # Step 3: Tumhara Simulation Engine Run karna
-    - name: Execute Traffic Simulator
+    # SYSTEM UPGRADE: Installing Neural Network Dependencies
+    - name: Install ML Dependencies
+      run: pip install pandas scikit-learn joblib
+
+    # STEP 1: Run Simulation & Generate CSV Data
+    - name: Execute Traffic Simulator (Data Generation)
       run: python simulation.py
 
-    # Step 4: Jo CSV Data log banega, usko server se nikal kar tumhe dena
-    - name: Upload Telemetry Dataset (Artifact)
+    # STEP 2: Train the AI Brain using the generated CSV
+    - name: Train AI Brain
+      run: python ai_brain.py
+
+    # STEP 3: Extract both Dataset and the trained AI Model
+    - name: Upload DATG Artifacts (Dataset & Model)
       uses: actions/upload-artifact@v4
       with:
-        name: traffic-dataset
-        path: traffic_telemetry.csv
-        
+        name: datg-system-artifacts
+        path: |
+          traffic_telemetry.csv
+          ai_model.pkl
+          
