@@ -16,54 +16,44 @@ graph TD
     F -->|Optimal Non-Linear Signal Allocation| B
 ```
 
-## 🛠️ Tech Stack & Tools
-- **Language:** Python 3.x
-- **Data Analysis:** Pandas, Scikit-learn
-- **Automation/CI/CD:** GitHub Actions
-- **Development Environment:** Android (Termux/Acode)
-- **Architecture:** Decentralized Mesh Communication
+## 🛠️ Tech Stack
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white) 
+![Pandas](https://img.shields.io/badge/Pandas-150458?style=for-the-badge&logo=pandas&logoColor=white) 
+![Scikit-Learn](https://img.shields.io/badge/scikit_learn-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white) 
+![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)
 
 ## 🛣️ Future Roadmap
 - [ ] Implement YOLO-based real-time vehicle detection.
 - [ ] Transition from Supervised Learning to Reinforcement Learning (PPO).
-- [ ] Add support for SUMO (Simulation of Urban MObility) integration.
+- [ ] Add support for SUMO integration.
 
 ---
 
-<div align='center'>
-
-### 📊 Experimental Verification Metrics (Live Cloud Logs)
-
-> **Execution Pipeline:** ![Research Validation](https://img.shields.io/badge/Framework-Research__Prototype-38bdf8?style=flat-square) ![Model](https://img.shields.io/badge/Algorithm-Random__Forest__Regressor-orange?style=flat-square)
+## 📊 Experimental Verification Metrics
 
 | Performance Dimension | Quantitative Value | Scientific Operational Analysis |
 | :--- | :---: | :--- |
-| **Telemetry Volume** | `2000 Continuous Records` | Synthetically generated via a pseudo-stochastic model mapping continuous rush-hour traffic distributions. |
-| **Delay Mitigation Index** | `📉 Latency Reduced by 25.3%` | Optimization lift achieved by replacing legacy fixed-time controllers with live AI inference. |
-| **Structural Throughput** | `97599 Total Vehicles` | Cumulative vehicle units successfully buffered and cleared across grid vertices. |
-| **Monitored Bottleneck** | `📍 Node Alpha` | System-wide highest stress junction localized via mathematical density variance tracking. |
+| **Telemetry Volume** | `2000 Records` | Synthetic rush-hour traffic data generation. |
+| **Delay Mitigation** | `📉 24.5% Reduction` | Optimization lift achieved vs legacy fixed controllers. |
+| **Throughput** | `101769 Total` | Units buffered and cleared across grid. |
+| **Bottleneck** | `📍 Node Alpha` | Critical junction density variance. |
 
-</div>
+---
 
-## 🚀 Deployment & Local Execution Guide
-Follow these steps to replicate the cloud simulation environment on your local terminal:
+## 🚀 Deployment & Local Execution
+Follow these steps to replicate the environment on your machine:
 
-### 1. Clone the Repository
+### 1. Initialize Environment
 ```bash
 git clone [https://github.com/Asmit-Singh-01/traffic-management-system.git](https://github.com/Asmit-Singh-01/traffic-management-system.git)
 cd traffic-management-system
-```
-
-### 2. Initialize Virtual Environment
-```bash
-python3 -m venv venv
-source venv/bin/activate
+python3 -m venv venv && source venv/bin/activate
 pip install pandas scikit-learn joblib
 ```
 
-### 3. Execute Simulation
+### 2. Full Pipeline Execution
 ```bash
-python simulation.py
-python ai_brain.py
-python generate_dashboard.py
+python simulation.py && python ai_brain.py && python generate_dashboard.py
 ```
+
+> *Note: Upon successful execution, open `dashboard.html` to view the live analytics dashboard.*
