@@ -1,5 +1,7 @@
 # DATG: Decentralized Autonomous Traffic Grid 🚦🧠
 
+I developed a research-oriented decentralized traffic management simulation that uses AI for adaptive signal timing. The project includes automated model training and deployment through GitHub Actions, and was developed primarily using an Android device under limited hardware resources.
+
 DATG is an AI-assisted decentralized traffic management simulation that demonstrates how autonomous traffic nodes can collaborate through a mesh communication model to reduce congestion and improve emergency vehicle prioritization.
 
 ---
@@ -27,8 +29,8 @@ graph TD
 | Performance Dimension | Quantitative Value | Scientific Operational Analysis |
 | :--- | :---: | :--- |
 | **Telemetry Volume** | `2000 Continuous Records` | Synthetically generated via a pseudo-stochastic model mapping continuous rush-hour traffic distributions. |
-| **Delay Mitigation Index** | `📉 Latency Reduced by 23.6%` | Optimization lift achieved by replacing legacy fixed-time controllers with live AI inference. |
-| **Structural Throughput** | `103335 Total Vehicles` | Cumulative vehicle units successfully buffered and cleared across grid vertices. |
+| **Delay Mitigation Index** | `📉 Latency Reduced by 24.6%` | Optimization lift achieved by replacing legacy fixed-time controllers with live AI inference. |
+| **Structural Throughput** | `99576 Total Vehicles` | Cumulative vehicle units successfully buffered and cleared across grid vertices. |
 | **Monitored Bottleneck** | `📍 Node Alpha` | System-wide highest stress junction localized via mathematical density variance tracking. |
 
 </div>
