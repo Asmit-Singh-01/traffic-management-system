@@ -5,6 +5,10 @@ on:
     branches: [ main, master ]
   workflow_dispatch: 
 
+# 🔥 IMPORTANT: Giving the cloud server write access to push changes back to repo
+permissions:
+  contents: write
+
 jobs:
   run-simulation:
     runs-on: ubuntu-latest
@@ -33,11 +37,21 @@ jobs:
     - name: Run AI-Powered Inference Simulation
       run: python simulation.py
 
-    # 🔥 STEP 3: Generate the Visual Web Dashboard
-    - name: Generate UI Dashboard
+    # STEP 3: Generate HTML Dashboard & Dynamic README
+    - name: Generate UI Dashboard & Documentation
       run: python generate_dashboard.py
 
-    # STEP 4: Extract Dataset, AI Model, and the HTML Web Dashboard
+    # 🔥 STEP 4: Automated Git Commit and Push back to GitHub
+    - name: Commit and Push Updated Documentation
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git add README.md
+        # [skip ci] is used so it doesn't trigger an infinite loop of workflows
+        git commit -m "docs: auto-update live cloud metrics [skip ci]" || echo "No changes to commit"
+        git push
+
+    # STEP 5: Extract Dataset, AI Model, and the HTML Web Dashboard
     - name: Upload DATG Artifacts (Dataset, Model & UI)
       uses: actions/upload-artifact@v4
       with:
