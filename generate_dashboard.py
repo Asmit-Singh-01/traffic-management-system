@@ -12,49 +12,57 @@ class TrafficDashboard:
             print("[DASHBOARD ERROR] Telemetry data missing.")
             return
 
-        # Reading the massive 6000+ rows dataset
         df = pd.read_csv(self.csv_path)
 
-        # Calculating Core Metrics
+        # Splitting data into Before AI (First 2000 steps) and After AI (Next 2000 steps)
+        # Total ticks will be 4000 because pipeline runs simulation twice
         total_ticks = df["Timestamp_Tick"].max()
-        avg_waiting_time = int(df["Allocated_Time"].mean())
+        
+        # Filtering data based on the simulation flow
+        half_ticks = total_ticks / 2
+        before_ai_df = df[df["Timestamp_Tick"] <= half_ticks]
+        after_ai_df = df[df["Timestamp_Tick"] > half_ticks]
+
+        avg_wait_before = before_ai_df["Allocated_Time"].mean()
+        avg_wait_after = after_ai_df["Allocated_Time"].mean()
+
+        # Calculate exact percentage reduction in wait time
+        # Standard Engineering Formula: ((Before - After) / Before) * 100
+        if avg_wait_before > 0:
+            efficiency_gain = ((avg_wait_before - avg_wait_after) / avg_wait_before) * 100
+        else:
+            efficiency_gain = 0
+
         total_vehicles_cleared = df["Outflow_Throughput"].sum()
         busiest_junction = df.groupby("Junction_Name")["North_Density"].mean().idxmax().replace('_', ' ')
 
-        # --- 1. HTML DASHBOARD GENERATION ---
+        # --- HTML DASHBOARD (With Real Science Metrics) ---
         html_content = f"""
         <!DOCTYPE html>
         <html lang="en">
         <head>
             <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>DATG Live AI Control Dashboard</title>
             <style>
-                body {{ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0f172a; color: #f8fafc; margin: 0; padding: 20px; }}
-                .container {{ max-width: 1200px; margin: auto; }}
-                header {{ text-align: center; padding: 20px; border-bottom: 2px solid #1e293b; }}
-                h1 {{ color: #38bdf8; margin: 0; }}
-                .grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 30px; }}
-                .card {{ background: #1e293b; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border-left: 5px solid #38bdf8; }}
-                .card.emergency {{ border-left-color: #ef4444; }}
-                .card h3 {{ margin: 0; color: #94a3b8; font-size: 14px; text-transform: uppercase; }}
-                .card p {{ font-size: 28px; font-weight: bold; margin: 10px 0 0 0; color: #f1f5f9; }}
-                .footer {{ text-align: center; margin-top: 5px; color: #64748b; font-size: 12px; padding: 40px; }}
+                body {{ font-family: 'Segoe UI', sans-serif; background-color: #0f172a; color: #f8fafc; padding: 20px; }}
+                .container {{ max-width: 1200px; margin: auto; text-align: center; }}
+                .grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 30px; }}
+                .card {{ background: #1e293b; padding: 20px; border-radius: 12px; border-left: 5px solid #38bdf8; text-align: left; }}
+                .card.success {{ border-left-color: #4ade80; }}
+                .card h3 {{ margin: 0; color: #94a3b8; font-size: 14px; }}
+                .card p {{ font-size: 26px; font-weight: bold; margin: 10px 0 0 0; }}
             </style>
         </head>
         <body>
             <div class="container">
-                <header>
-                    <h1>DATG Autonomous Traffic Infrastructure</h1>
-                    <p>Live Cloud Execution Analytics & MLOps Insights</p>
-                </header>
+                <h1 style="color: #38bdf8;">DATG Autonomous Traffic Infrastructure</h1>
+                <p>Research Prototype & MLOps Verification Insights</p>
                 <div class="grid">
-                    <div class="card"><h3>Total Simulation Scale</h3><p>{total_ticks} Ticks</p></div>
-                    <div class="card"><h3>AI Avg Signal Budget</h3><p>{avg_waiting_time}s</p></div>
-                    <div class="card"><h3>Network Throughput</h3><p>{total_vehicles_cleared} Vehicles</p></div>
-                    <div class="card emergency"><h3>Highest Congestion Node</h3><p>{busiest_junction}</p></div>
+                    <div class="card"><h3>Total Telemetry Scale</h3><p>{total_ticks} Ticks</p></div>
+                    <div class="card success"><h3>AI Optimization Index</h3><p>⚠️ Wait Time Reduced by {efficiency_gain:.1f}%</p></div>
+                    <div class="card"><h3>Total Net Throughput</h3><p>{total_vehicles_cleared} Vehicles</p></div>
+                    <div class="card"><h3>Bottleneck Node</h3><p>{busiest_junction}</p></div>
                 </div>
-                <div class="footer"><p>System Status: <span style="color: #4ade80;">● Fully Autonomous (AI Inference Deployed)</span></p></div>
             </div>
         </body>
         </html>
@@ -62,43 +70,44 @@ class TrafficDashboard:
         with open(self.output_html, "w", encoding="utf-8") as f:
             f.write(html_content)
 
-        # --- 2. DYNAMIC README GENERATION (The Impression Booster) ---
+        # --- DYNAMIC README (Removing Buzzwords & Adding Limitations) ---
         markdown_content = f"""# DATG: Decentralized Autonomous Traffic Grid 🚦🧠
 
-An advanced, multi-agent AI infrastructure designed to replace static traffic light systems with a predictive, highly scalable mesh network. Built natively for cloud-execution using MLOps pipelines.
+A research-oriented proof-of-concept (PoC) demonstrating decentralized multi-agent reinforcement mechanics for intelligent traffic mesh networks. Built natively for cloud-execution using automated MLOps pipelines.
 
 ---
 
-## 📊 Live Cloud Execution Metrics (Auto-Generated)
-> **Status:** ![AI Active](https://img.shields.io/badge/System_Status-Fully_Autonomous_•_AI_Inference-4ade80?style=flat-square)
-> *These metrics represent live data processed directly by the trained Random Forest model on GitHub Actions cloud servers.*
+## 📊 Empirical Performance Matrix (Auto-Generated)
+> **Status:** ![AI Active](https://img.shields.io/badge/System_Status-Research_Prototype_•_AI_Inference-38bdf8?style=flat-square)
+> *Metrics are calculated live by comparing algorithmic mathematical baseline behavior against the trained Random Forest Regressor.*
 
-| Metric Dimension | Current Cloud Value | Operational Insight |
+| Metric Dimension | Experimental Value | Engineering Analysis |
 | :--- | :--- | :--- |
-| **Total Simulation Scale** | `{total_ticks} Continuous Ticks` | Enterprise-grade stress testing vector volume |
-| **AI Avg Signal Budget** | `{avg_waiting_time} Seconds` | Dynamically optimized green-light window to minimize idling |
-| **Network Throughput** | `{total_vehicles_cleared} Vehicles Cleared` | Total structural fluid mobility achieved across nodes |
-| **Critical Bottleneck Node** | `🔥 {busiest_junction}` | System-wide highest stress junction localized by AI sensors |
+| **Telemetry Volume** | `{total_ticks} Continuous Records` | Data pool generated across high-stress stochastic time blocks. |
+| **AI Optimization Index** | `📉 Wait Time Reduced by {efficiency_gain:.1f}%` | Core performance lift achieved by replacing static formula with AI inference. |
+| **Network Throughput** | `{total_vehicles_cleared} Total Vehicles` | Cumulative vehicle units successfully transitioned across grid edges. |
+| **Monitored Bottleneck** | `📍 {busiest_junction}` | System-wide highest stress junction localized by agent logging. |
 
 ---
 
 ## ⚙️ Core Architecture
+1. **Autonomous Edge Agents (`agent.py`):** Simulates independent junction behaviors adjusting signal distributions locally based on real-time lane weights.
+2. **I2I Communication Mesh (`network.py`):** Simplistic Infrastructure-to-Infrastructure packet relays allowing upstream nodes to alert downstream nodes of pending traffic load.
+3. **Emergency Preemption Matrix:** An overriding queue mechanism that intercepts standard weights when high-priority vectors (Ambulances) are injected.
+4. **Machine Learning Inference (`ai_brain.py`):** Uses a **Random Forest Regressor** to parse telemetry files and predict optimal timing slices, selected for its high interpretability on tabular data.
 
-1. **Autonomous Edge Agents (`agent.py`):** Every junction acts as an independent node calculating its own dynamic optimal signal budget based on live density weights.
-2. **I2I Mesh Network (`network.py`):** Infrastructure-to-Infrastructure communication. Junctions broadcast incoming vehicle loads to downstream nodes for predictive clearing.
-3. **Emergency Preemption:** Built-in chaos management. Automatically detects high-priority vehicles (Ambulances) and dynamically re-routes system weights.
-4. **Automated Telemetry (`metrics.py`):** Real-time extraction of lane densities into a tabular dataset.
-5. **AI Neural Brain (`ai_brain.py`):** A Random Forest Regressor trained automatically via cloud CI/CD to predict mathematically optimal signal timings.
-
-## 🚀 Cloud Execution & CI/CD
-This project requires **Zero Local Compute**. It uses GitHub Actions to provision an Ubuntu server, install dependencies (`pandas`, `scikit-learn`), generate telemetry, train the model, and rewrite this documentation live.
+## ⚠️ Current System Limitations & Scope
+As a research prototype, this system operates under specific constraints designed for algorithmic validation rather than production deployment:
+* **Pure Simulation:** The system relies on synthetically generated stochastic lane streams rather than real-world CCTV or inductive-loop sensor feeds.
+* **Deterministic Outflow Rates:** Vehicle clearing behavior follows mathematical limits (`allocated_time / 1.5`) which may vary in actual physical environments.
+* **Simplified Network Topology:** The mesh network is validated on a localized grid rather than highly chaotic, irregular urban maps.
 """
         with open(self.output_md, "w", encoding="utf-8") as f:
             f.write(markdown_content)
             
-        print("[SUCCESS] HTML Dashboard and README.md metrics successfully synchronized!")
+        print("[SUCCESS] Applied brutal honesty and scientific metrics to documentation!")
 
 if __name__ == "__main__":
     dash = TrafficDashboard()
     dash.generate_analytics()
-    
+        
