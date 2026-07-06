@@ -66,6 +66,8 @@ class TrafficDashboard:
         md_lines = [
             "# DATG: Decentralized Autonomous Traffic Grid 🚦🧠",
             "",
+             "I developed a research-oriented decentralized traffic management simulation that uses AI for adaptive signal timing. The project includes automated model training and deployment through GitHub Actions, and was developed primarily using an Android device under limited hardware resources.",
+            "",
             "DATG is an AI-assisted decentralized traffic management simulation that demonstrates how autonomous traffic nodes can collaborate through a mesh communication model to reduce congestion and improve emergency vehicle prioritization.",
             "",
             "---",
