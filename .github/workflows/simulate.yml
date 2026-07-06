@@ -1,6 +1,5 @@
 name: DATG Cloud Simulation Engine
 
-# Trigger automatically on push or manual button click
 on:
   push:
     branches: [ main, master ]
@@ -19,7 +18,6 @@ jobs:
       with:
         python-version: '3.10'
 
-    # SYSTEM UPGRADE: Installing Neural Network Dependencies
     - name: Install ML Dependencies
       run: pip install pandas scikit-learn joblib
 
@@ -30,17 +28,22 @@ jobs:
     # STEP 2: Train the AI Brain using the generated CSV
     - name: Train AI Brain
       run: python ai_brain.py
-    # STEP 2.5: Re-run simulation now that AI model exists to test inference
+
+    # STEP 2.5: Re-run simulation with AI Active
     - name: Run AI-Powered Inference Simulation
       run: python simulation.py
-      
 
-    # STEP 3: Extract both Dataset and the trained AI Model
-    - name: Upload DATG Artifacts (Dataset & Model)
+    # 🔥 STEP 3: Generate the Visual Web Dashboard
+    - name: Generate UI Dashboard
+      run: python generate_dashboard.py
+
+    # STEP 4: Extract Dataset, AI Model, and the HTML Web Dashboard
+    - name: Upload DATG Artifacts (Dataset, Model & UI)
       uses: actions/upload-artifact@v4
       with:
         name: datg-system-artifacts
         path: |
           traffic_telemetry.csv
           ai_model.pkl
+          dashboard.html
           
