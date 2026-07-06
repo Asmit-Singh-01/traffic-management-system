@@ -1,29 +1,30 @@
 # DATG: Decentralized Autonomous Traffic Grid 🚦🧠
 
-An advanced, multi-agent AI infrastructure designed to replace static traffic light systems with a predictive, highly scalable mesh network. Built natively for cloud-execution using MLOps pipelines.
+A research-oriented proof-of-concept (PoC) demonstrating decentralized multi-agent reinforcement mechanics for intelligent traffic mesh networks. Built natively for cloud-execution using automated MLOps pipelines.
 
 ---
 
-## 📊 Live Cloud Execution Metrics (Auto-Generated)
-> **Status:** ![AI Active](https://img.shields.io/badge/System_Status-Fully_Autonomous_•_AI_Inference-4ade80?style=flat-square)
-> *These metrics represent live data processed directly by the trained Random Forest model on GitHub Actions cloud servers.*
+## 📊 Empirical Performance Matrix (Auto-Generated)
+> **Status:** ![AI Active](https://img.shields.io/badge/System_Status-Research_Prototype_•_AI_Inference-38bdf8?style=flat-square)
+> *Metrics are calculated live by comparing algorithmic mathematical baseline behavior against the trained Random Forest Regressor.*
 
-| Metric Dimension | Current Cloud Value | Operational Insight |
+| Metric Dimension | Experimental Value | Engineering Analysis |
 | :--- | :--- | :--- |
-| **Total Simulation Scale** | `2000 Continuous Ticks` | Enterprise-grade stress testing vector volume |
-| **AI Avg Signal Budget** | `22 Seconds` | Dynamically optimized green-light window to minimize idling |
-| **Network Throughput** | `101129 Vehicles Cleared` | Total structural fluid mobility achieved across nodes |
-| **Critical Bottleneck Node** | `🔥 Node Alpha` | System-wide highest stress junction localized by AI sensors |
+| **Telemetry Volume** | `2000 Continuous Records` | Data pool generated across high-stress stochastic time blocks. |
+| **AI Optimization Index** | `📉 Wait Time Reduced by 0.5%` | Core performance lift achieved by replacing static formula with AI inference. |
+| **Network Throughput** | `101369 Total Vehicles` | Cumulative vehicle units successfully transitioned across grid edges. |
+| **Monitored Bottleneck** | `📍 Node Alpha` | System-wide highest stress junction localized by agent logging. |
 
 ---
 
 ## ⚙️ Core Architecture
+1. **Autonomous Edge Agents (`agent.py`):** Simulates independent junction behaviors adjusting signal distributions locally based on real-time lane weights.
+2. **I2I Communication Mesh (`network.py`):** Simplistic Infrastructure-to-Infrastructure packet relays allowing upstream nodes to alert downstream nodes of pending traffic load.
+3. **Emergency Preemption Matrix:** An overriding queue mechanism that intercepts standard weights when high-priority vectors (Ambulances) are injected.
+4. **Machine Learning Inference (`ai_brain.py`):** Uses a **Random Forest Regressor** to parse telemetry files and predict optimal timing slices, selected for its high interpretability on tabular data.
 
-1. **Autonomous Edge Agents (`agent.py`):** Every junction acts as an independent node calculating its own dynamic optimal signal budget based on live density weights.
-2. **I2I Mesh Network (`network.py`):** Infrastructure-to-Infrastructure communication. Junctions broadcast incoming vehicle loads to downstream nodes for predictive clearing.
-3. **Emergency Preemption:** Built-in chaos management. Automatically detects high-priority vehicles (Ambulances) and dynamically re-routes system weights.
-4. **Automated Telemetry (`metrics.py`):** Real-time extraction of lane densities into a tabular dataset.
-5. **AI Neural Brain (`ai_brain.py`):** A Random Forest Regressor trained automatically via cloud CI/CD to predict mathematically optimal signal timings.
-
-## 🚀 Cloud Execution & CI/CD
-This project requires **Zero Local Compute**. It uses GitHub Actions to provision an Ubuntu server, install dependencies (`pandas`, `scikit-learn`), generate telemetry, train the model, and rewrite this documentation live.
+## ⚠️ Current System Limitations & Scope
+As a research prototype, this system operates under specific constraints designed for algorithmic validation rather than production deployment:
+* **Pure Simulation:** The system relies on synthetically generated stochastic lane streams rather than real-world CCTV or inductive-loop sensor feeds.
+* **Deterministic Outflow Rates:** Vehicle clearing behavior follows mathematical limits (`allocated_time / 1.5`) which may vary in actual physical environments.
+* **Simplified Network Topology:** The mesh network is validated on a localized grid rather than highly chaotic, irregular urban maps.
