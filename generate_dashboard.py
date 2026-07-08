@@ -63,7 +63,7 @@ class TrafficDashboard:
         # --- 2. ACADEMIC README (No Triple Quotes) ---
         repo_path = os.environ.get('GITHUB_REPOSITORY', 'your-username/your-repo')
         
-                md_lines = [
+        md_lines = [
             "# DATG: Decentralized Autonomous Traffic Grid 🚦🧠",
             "",
             "A research-oriented decentralized traffic management simulation utilizing AI for adaptive signal timing. Engineered entirely under strict compute constraints (Android/Termux) to simulate resource-limited edge-deployment environments.",
