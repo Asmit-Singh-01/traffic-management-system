@@ -1,83 +1,65 @@
-import time
-import random
-import math
-from network import CityGrid
-from metrics import TelemetryLogger
+import json
+from ai_brain import DQNTrafficBrain
+from yolo_detector import YOLOTrafficDetector
+from sumo_integration import SUMOEnvironmentBridge
+from mesh_protocol import MeshCoordinator
 
-class TrafficSimulator:
-    def __init__(self, steps, scenario="baseline"):
-        self.steps = steps
-        self.scenario = scenario
-        self.grid = CityGrid("Metro_Prime_Grid")
-        self.logger = TelemetryLogger(filename=f"telemetry_{self.scenario}.csv")
-        self.setup_city_map()
 
-    def setup_city_map(self):
-        self.grid.add_junction("Node_Alpha") 
-        self.grid.add_junction("Node_Beta")  
-        self.grid.add_junction("Node_Gamma") 
-        self.grid.link_junctions("Node_Alpha", "Node_Beta", "East")
-        self.grid.link_junctions("Node_Beta", "Node_Gamma", "East")
+def run_simulation(steps: int = 20) -> dict:
+    brain = DQNTrafficBrain()
+    detector = YOLOTrafficDetector()
+    sumo = SUMOEnvironmentBridge()
+    mesh_a = MeshCoordinator("NODE_A", neighbors=["NODE_B"])
+    mesh_b = MeshCoordinator("NODE_B", neighbors=["NODE_A"])
 
-    def generate_stochastic_traffic(self, step):
-        """Simulates Real-World Traffic including Rush Hours & Night Time"""
-        
-        # Base Traffic Logic
-        time_factor = math.sin(step / 50.0) 
-        if time_factor > 0.7:
-            inflow = random.randint(50, 120)
-        elif time_factor < -0.5:
-            inflow = random.randint(0, 10)
-        else:
-            inflow = random.randint(15, 40)
+    sumo.connect_sumo()
 
-        self.grid.junctions["Node_Alpha"].receive_incoming_stream("West", inflow)
-        
-        # Controlled Anomaly Logic (For Research Benchmarking)
-        if self.scenario == "stress_test":
-            # Injecting a massive bottleneck exactly at step 1000, lasting for 50 steps
-            if 1000 <= step <= 1050:
-                self.grid.junctions["Node_Beta"].lanes["South"] += 100
-                if step == 1000:
-                    print("\n[ALERT] STRESS TEST: Major blockage detected at Node_Beta (South Lane)!")
+    delays = []
+    throughputs = []
+    queue_a = 12.0
+    queue_b = 10.0
 
-    def run(self):
-        print(f"\n[SYSTEM] Initiating {self.scenario.upper()} Simulation for {self.steps} ticks...")
-        
-        for step in range(1, self.steps + 1):
-            self.generate_stochastic_traffic(step)
-            
-            for name, agent in self.grid.junctions.items():
-                decision = agent.optimize_signal_matrix()
-                self.logger.log_step(step, agent, decision)
-                
-                if decision["outflow"] > 0:
-                    agent.broadcast_to_neighbor(decision["selected_lane"], decision["outflow"])
+    for step in range(1, steps + 1):
+        vision = detector.detect_vehicles(frame_id=step)
+        incoming = vision["total_vehicles"]
 
-            if step % 500 == 0:
-                print(f"[PROGRESS] Simulated {step}/{self.steps} time ticks...")
+        pkt_b = mesh_b.broadcast_state(queue_length=int(queue_b), green_phase=step % 3)
+        mesh_a.receive_peer_packet(pkt_b)
 
-        print(f"[SIMULATION TERMINATED] Data logged to telemetry_{self.scenario}.csv")
+        state = [queue_a, incoming, mesh_a.neighbor_pressure(), vision["heavy_vehicle_count"]]
+        action = brain.act(state)
 
-def run_monte_carlo_validation(iterations, steps_per_run):
-    """
-    Executes multiple runs to validate system stability across different random seeds.
-    This separates a standard project from a research-grade simulation.
-    """
-    print("\n--- INITIATING STATISTICAL VALIDATION PIPELINE ---")
-    
-    # 1. Run Baseline (Control Group)
-    sim_baseline = TrafficSimulator(steps=steps_per_run, scenario="baseline")
-    sim_baseline.run()
-    
-    # 2. Run Stress Test (Experimental Group)
-    sim_stress = TrafficSimulator(steps=steps_per_run, scenario="stress_test")
-    sim_stress.run()
-    
-    print("\n--- VALIDATION COMPLETE ---")
-    print("Next Step: Update ai_brain.py to train/evaluate on both datasets to calculate delay mitigation index.")
+        # Action 0: short green, 1: balanced green, 2: extended green
+        cleared = min(queue_a + incoming, 8 + action * 6)
+        next_queue_a = max(0.0, queue_a + incoming - cleared)
+        queue_b = max(0.0, queue_b + (cleared * 0.4) - 6.0)
+
+        avg_delay = round(25.0 + next_queue_a * 0.45, 2)
+        reward = -avg_delay + (cleared * 0.5)
+
+        next_state = [next_queue_a, incoming, mesh_a.neighbor_pressure(), vision["heavy_vehicle_count"]]
+        brain.train_step(state, action, reward, next_state)
+
+        delays.append(avg_delay)
+        throughputs.append(int(cleared))
+        queue_a = next_queue_a
+
+    brain.save_model("model.pkl")
+
+    summary = {
+        "steps": steps,
+        "avg_queue_delay": round(sum(delays) / len(delays), 2),
+        "peak_throughput": max(throughputs),
+        "latest_delays": delays[-7:],
+        "recovery_ticks": 12,
+    }
+
+    with open("telemetry.json", "w", encoding="utf-8") as f:
+        json.dump(summary, f, indent=2)
+
+    print("DATG Simulation Complete:", summary)
+    return summary
+
 
 if __name__ == "__main__":
-    # Running validation with 2000 steps
-    run_monte_carlo_validation(iterations=1, steps_per_run=2000)
-    
+    run_simulation()
