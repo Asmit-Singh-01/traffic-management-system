@@ -91,10 +91,13 @@ graph TD
 ![Scikit-Learn](https://img.shields.io/badge/scikit_learn-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white) 
 ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)
 
-## 🛣️ Future Roadmap
-- [ ] Implement YOLO-based real-time vehicle detection.
-- [ ] Transition from Supervised Learning to Reinforcement Learning (PPO).
-- [ ] Add support for SUMO integration.
+## Future Roadmap
+
+- [x] Implement vehicle detection module (`yolo_detector.py`).
+- [x] Transition from supervised regression to Reinforcement Learning (`DQNTrafficBrain` in `ai_brain.py`).
+- [x] Add `SUMOEnvironmentBridge` (`sumo_integration.py`) and peer-to-peer `MeshCoordinator` (`mesh_protocol.py`).
+- [ ] Connect live camera feeds and full SUMO `.sumocfg` scenarios for hardware-in-the-loop testing.
+
 
 ---
 ## 📊 Statistical Validation & Benchmarks
